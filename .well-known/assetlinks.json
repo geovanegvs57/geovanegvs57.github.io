@@ -2,7 +2,7 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "io.github.geovaneqvs57.twa",
+    "package_name": "io.github.geovanegvs57.twa",
     "sha256_cert_fingerprints": [
       "57:F8:9F:0C:7E:76:6F:7D:F4:EB:B9:B7:08:E4:50:7A:19:00:AA:4D:69:90:85:6D:7F:E0:61:68:53:CE:4F:F1"
     ]
