@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sempre-juntos-v1';
+const CACHE_NAME = 'sempre-juntos-v2';
 const ASSETS = [
   './',
   './index.html',
