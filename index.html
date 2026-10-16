@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#c44569">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sempre Juntos">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>Sempre Juntos</title>
+
+<style>
+/* ====================== DESIGN SYSTEM ====================== */
+:root{
+  --primary: #c44569;
+  --primary-soft: #ff6b9d;
+  --primary-deep: #6a0572;
+  --grad: linear-gradient(135deg, #ff6b9d 0%, #c44569 55%, #6a0572 100%);
+  --primary-tint: rgba(196,69,105,0.14);
+  --bg-1: #fff5f8;
+  --bg-2: #f5eef9;
+  --surface: #ffffff;
+  --surface-2: #fbf6fd;
+  --text: #2d1b3d;
+  --text-muted: #8b7a94;
+  --border: rgba(0,0,0,0.08);
+  --success: #22c55e;
+  --danger: #ef4444;
+  --shadow: 0 6px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.14);
+  --radius: 22px;
+  --radius-sm: 14px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+[data-theme="azul"]{
+  --primary: #3b82f6;
+  --primary-soft: #60a5fa;
+  --primary-deep: #4338ca;
+  --grad: linear-gradient(135deg, #60a5fa 0%, #3b82f6 55%, #4338ca 100%);
+  --primary-tint: rgba(59,130,246,0.14);
+  --bg-1: #f0f6ff;
+  --bg-2: #eef0fd;
+  --surface-2: #f5f8ff;
+}
+
+[data-theme="verde"]{
+  --primary: #10b981;
+  --primary-soft: #34d399;
+  --primary-deep: #047857;
+  --grad: linear-gradient(135deg, #34d399 0%, #10b981 55%, #047857 100%);
+  --primary-tint: rgba(16,185,129,0.14);
+  --bg-1: #effcf5;
+  --bg-2: #eaf7f2;
+  --surface-2: #f2fdf8;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg-1: #130a1a;
+    --bg-2: #1a1220;
+    --surface: #221830;
+    --surface-2: #2a1e3a;
+    --text: #f5eff9;
+    --text-muted: #a897b3;
+    --border: rgba(255,255,255,0.10);
+    --shadow: 0 6px 24px rgba(0,0,0,0.45);
+    --shadow-lg: 0 16px 40px rgba(0,0,0,0.55);
+  }
+  [data-theme="azul"]{
+    --bg-1: #0a1220;
+    --bg-2: #0f1628;
+    --surface: #16202f;
+    --surface-2: #1c2838;
+  }
+  [data-theme="verde"]{
+    --bg-1: #08140f;
+    --bg-2: #0b1a14;
+    --surface: #12241c;
+    --surface-2: #182b22;
+  }
+}
+
+*{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html,body{ margin:0; padding:0; }
+html{ -webkit-text-size-adjust: 100%; }
+
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  background:
+    radial-gradient(circle at 15% 0%, var(--primary-tint), transparent 45%),
+    radial-gradient(circle at 100% 100%, var(--primary-tint), transparent 45%),
+    linear-gradient(160deg, var(--bg-1), var(--bg-2));
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100dvh;
+  line-height: 1.45;
+  font-size: 16px;
+  overflow-x: hidden;
+  padding-top: var(--safe-top);
+  padding-bottom: calc(96px + var(--safe-bottom));
+  touch-action: manipulation;
+}
+
+button{ font: inherit; cursor: pointer; border: 0; background: none; color: inherit; touch-action: manipulation; }
+button:focus{ outline: none; }
+button:focus-visible{ outline: 2px solid var(--primary); outline-offset: 2px; }
+input, select{ font: inherit; color: inherit; }
+h1,h2,h3,p{ margin: 0; }
+img{ display: block; max-width: 100%; }
+
+/* ====================== TOPBAR ====================== */
+.topbar{
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  border-bottom: 1px solid var(--border);
+}
+@media (prefers-color-scheme: dark){
+  .topbar{ background: rgba(26,18,32,0.75); }
+}
+.logo-mini{
+  width: 42px; height: 42px; border-radius: 13px;
+  box-shadow: 0 6px 18px var(--primary-tint);
+  flex-shrink: 0;
+  display: block;
+}
+.title-block{ flex: 1; min-width: 0; }
+.title-block h1{
+  font-size: 17px; font-weight: 800; letter-spacing: -0.3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  background: var(--grad);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.title-block p{
+  font-size: 11.5px; color: var(--text-muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-weight: 500;
+}
+.icon-btn{
+  width: 42px; height: 42px; border-radius: 12px;
+  display: grid; place-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 19px;
+  transition: transform 0.15s, box-shadow 0.2s;
+  box-shadow: var(--shadow);
+}
+.icon-btn:active{ transform: scale(0.92); }
+
+/* ====================== MAIN ====================== */
+main{
+  padding: 16px 16px 20px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ====================== HERO ====================== */
+.hero{
+  position: relative; overflow: hidden;
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  background: var(--grad);
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 22px;
+}
+.hero::before{
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(circle at 20% 0%, rgba(255,255,255,0.30) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero-badge{
+  position: relative;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: 99px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(8px);
+  font-size: 11.5px; font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+.hero-names{
+  position: relative;
+  margin-top: 14px;
+  font-size: 14px; opacity: 0.95; font-weight: 600;
+}
+.hero-main{
+  position: relative;
+  margin-top: 6px;
+  font-size: 32px; font-weight: 800; letter-spacing: -1px;
+  line-height: 1.1;
+}
+.hero-main span{ font-weight: 500; opacity: 0.85; font-size: 20px; }
+.hero-sub{
+  position: relative;
+  margin-top: 4px; font-size: 14px; opacity: 0.92;
+  min-height: 20px;
+}
+.hero-divider{
+  position: relative;
+  height: 1px; background: rgba(255,255,255,0.25);
+  margin: 16px 0;
+}
+.hero-live-label{
+  position: relative;
+  font-size: 10.5px; text-transform: uppercase;
+  letter-spacing: 0.8px; opacity: 0.85; font-weight: 700;
+  margin-bottom: 4px;
+}
+.hero-live{
+  position: relative;
+  font-size: 17px; font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3px;
+}
+.hero-bodas{
+  position: relative;
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.16);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-bodas-icon{ font-size: 24px; flex-shrink: 0; }
+.hero-bodas-text{ flex: 1; min-width: 0; }
+.hero-bodas-title{
+  font-size: 10.5px; text-transform: uppercase;
+  letter-spacing: 0.8px; opacity: 0.85; font-weight: 700;
+}
+.hero-bodas-value{
+  font-size: 14px; font-weight: 700; margin-top: 2px;
+  line-height: 1.3;
+}
+
+/* ====================== SECTION ====================== */
+.section-head{
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin: 22px 4px 12px;
+}
+.section-head:first-child{ margin-top: 8px; }
+.section-head h2{
+  font-size: 16px; font-weight: 800; letter-spacing: -0.3px;
+}
+.section-head span{
+  font-size: 12.5px; color: var(--text-muted); font-weight: 600;
+}
+
+/* ====================== UPCOMING ====================== */
+.upcoming{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.upcoming-item{
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--border);
+}
+.upcoming-item:last-child{ border-bottom: 0; }
+.upcoming-item:active{ background: var(--surface-2); }
+.upcoming-item.is-today{
+  background: var(--grad);
+  color: #fff;
+}
+.upcoming-item.is-today .upcoming-name,
+.upcoming-item.is-today .upcoming-role,
+.upcoming-item.is-today .upcoming-days{ color: #fff !important; opacity: 1; }
+.upcoming-avatar{
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 20px;
+  background: linear-gradient(135deg, #ffe3ec, #e5d4ff);
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.7);
+}
+@media (prefers-color-scheme: dark){
+  .upcoming-avatar{ background: linear-gradient(135deg, #3a1a35, #2a1540); }
+}
+.upcoming-avatar img{ width: 100%; height: 100%; object-fit: cover; }
+.upcoming-info{ flex: 1; min-width: 0; }
+.upcoming-name{
+  font-size: 15px; font-weight: 700; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.upcoming-role{
+  font-size: 11.5px; color: var(--text-muted); font-weight: 600;
+  margin-top: 1px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.upcoming-days{
+  font-size: 13px; font-weight: 700;
+  color: var(--primary);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.upcoming-days small{
+  display: block;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1px;
+}
+
+/* ====================== MEMBER CARD ====================== */
+.members-list{
+  display: flex; flex-direction: column; gap: 14px;
+}
+.card{
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.22s;
+}
+.card:active{
+  transform: scale(0.98);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+.card-head{
+  display: flex; align-items: center; gap: 14px;
+}
+.avatar{
+  width: 54px; height: 54px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 27px;
+  background: linear-gradient(135deg, #ffe3ec, #e5d4ff);
+  border: 2px solid rgba(255,255,255,0.7);
+  box-shadow: 0 4px 14px var(--primary-tint);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+@media (prefers-color-scheme: dark){
+  .avatar{
+    background: linear-gradient(135deg, #3a1a35, #2a1540);
+    border-color: rgba(255,255,255,0.06);
+  }
+}
+.avatar img{
+  width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+}
+.card-id{ flex: 1; min-width: 0; }
+.card-role{
+  font-size: 11px; font-weight: 800; letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.card-name{
+  font-size: 17px; font-weight: 700; letter-spacing: -0.2px;
+  margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.card-age{
+  margin-top: 12px;
+  display: flex; align-items: baseline; gap: 8px;
+  flex-wrap: wrap;
+}
+.age-num{
+  font-size: 28px; font-weight: 800; letter-spacing: -1px;
+  line-height: 1;
+  background: var(--grad);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-variant-numeric: tabular-nums;
+}
+.age-label{
+  font-size: 13px; color: var(--text-muted); font-weight: 600;
+}
+
+.card-info{
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.info-row{
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text-muted);
+}
+.info-row strong{
+  color: var(--text); font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.bday-badge{
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 99px;
+  background: var(--surface-2);
+  font-weight: 700; color: var(--text);
+  font-size: 12.5px;
+  align-self: flex-start;
+  border: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+.bday-badge.today{
+  background: var(--grad); color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px var(--primary-tint);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{ transform: scale(1); }
+  50%{ transform: scale(1.05); }
+}
+
+/* ====================== EMPTY ====================== */
+.empty{
+  text-align: center;
+  padding: 44px 22px;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1.5px dashed var(--border);
+}
+.empty-emoji{ font-size: 46px; margin-bottom: 12px; display: block; }
+.empty-title{
+  font-size: 15.5px; font-weight: 700; color: var(--text);
+  margin-bottom: 6px;
+}
+.empty-sub{ font-size: 13.5px; line-height: 1.6; }
+
+/* ====================== FAB ====================== */
+.fab{
+  position: fixed;
+  right: 18px;
+  bottom: calc(22px + var(--safe-bottom));
+  width: 62px; height: 62px; border-radius: 50%;
+  background: var(--grad);
+  color: #fff;
+  display: grid; place-items: center;
+  font-size: 32px; font-weight: 300; line-height: 1;
+  box-shadow: 0 12px 28px var(--primary-tint);
+  z-index: 30;
+  transition: transform 0.18s;
+  padding-bottom: 3px;
+}
+.fab:active{ transform: scale(0.90); }
+
+/* ====================== MODAL ====================== */
+.modal[hidden]{ display: none !important; }
+.modal:not([hidden]){ display: flex; }
+
+.modal{
+  position: fixed; inset: 0; z-index: 100;
+  align-items: flex-end; justify-content: center;
+  background: rgba(15,10,20,0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fade 0.2s ease;
+  padding: 0;
+}
+@media (min-width: 600px){
+  .modal:not([hidden]){ align-items: center; }
+}
+@keyframes fade{ from{ opacity: 0; } to{ opacity: 1; } }
+
+#confirmModal:not([hidden]){ z-index: 9999; }
+
+.modal-card{
+  width: 100%; max-width: 520px;
+  background: var(--surface);
+  border-radius: 26px 26px 0 0;
+  padding: 18px 20px calc(24px + var(--safe-bottom));
+  box-shadow: 0 -20px 60px rgba(0,0,0,0.3);
+  animation: slideModal 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+  max-height: 92dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  pointer-events: auto;
+}
+@media (min-width: 600px){
+  .modal-card{ border-radius: 26px; padding-bottom: 24px; }
+}
+@keyframes slideModal{
+  from{ transform: translateY(30px); opacity: 0; }
+  to{ transform: translateY(0); opacity: 1; }
+}
+
+.modal-grabber{
+  width: 44px; height: 5px; border-radius: 99px;
+  background: var(--border);
+  margin: 0 auto 14px;
+}
+@media (min-width: 600px){ .modal-grabber{ display: none; } }
+.modal h3{
+  font-size: 19px; font-weight: 800; letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+.modal-sub{
+  font-size: 13px; color: var(--text-muted); margin-bottom: 18px;
+}
+
+/* ====================== FORM ====================== */
+.field{ margin-bottom: 16px; }
+.field label{
+  display: block;
+  font-size: 12px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--text-muted);
+  margin-bottom: 7px;
+}
+.field input, .field select{
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field input:focus, .field select:focus{
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-tint);
+}
+.field select{
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%238b7a94' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+}
+.field input[type="date"]{
+  min-height: 48px;
+  color-scheme: light dark;
+}
+
+/* Photo picker */
+.photo-row{
+  display: flex; align-items: center; gap: 14px;
+}
+.photo-preview{
+  width: 78px; height: 78px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 32px;
+  background: linear-gradient(135deg, #ffe3ec, #e5d4ff);
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+@media (prefers-color-scheme: dark){
+  .photo-preview{ background: linear-gradient(135deg, #3a1a35, #2a1540); }
+}
+.photo-preview img{ width: 100%; height: 100%; object-fit: cover; }
+.photo-actions{
+  display: flex; flex-direction: column; gap: 8px;
+  flex: 1; min-width: 0;
+}
+.photo-actions .btn{
+  padding: 10px 14px;
+  font-size: 13.5px;
+  min-height: 42px;
+}
+
+/* Emoji picker */
+.emoji-picker{
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.emoji-opt{
+  width: 46px; height: 46px; border-radius: 12px;
+  display: grid; place-items: center;
+  font-size: 23px;
+  background: var(--surface-2);
+  border: 2px solid transparent;
+  transition: transform 0.1s, border-color 0.15s, background 0.15s;
+}
+.emoji-opt:active{ transform: scale(0.9); }
+.emoji-opt.selected{
+  border-color: var(--primary);
+  background: var(--primary-tint);
+}
+
+/* Theme picker */
+.theme-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.theme-opt{
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 12px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 2px solid transparent;
+  transition: border-color 0.15s, transform 0.1s;
+}
+.theme-opt:active{ transform: scale(0.95); }
+.theme-opt.selected{ border-color: var(--primary); }
+.theme-swatch{
+  width: 42px; height: 42px; border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.theme-swatch.rosa{ background: linear-gradient(135deg, #ff6b9d, #c44569, #6a0572); }
+.theme-swatch.azul{ background: linear-gradient(135deg, #60a5fa, #3b82f6, #4338ca); }
+.theme-swatch.verde{ background: linear-gradient(135deg, #34d399, #10b981, #047857); }
+.theme-name{
+  font-size: 12px; font-weight: 700;
+  color: var(--text);
+}
+
+/* Buttons */
+.form-actions{
+  display: flex; gap: 10px; margin-top: 22px;
+}
+.btn{
+  padding: 14px 18px; border-radius: 14px;
+  font-weight: 700; font-size: 15px;
+  transition: transform 0.1s, opacity 0.15s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.btn:active{ transform: scale(0.97); }
+.btn-primary{
+  background: var(--grad); color: #fff;
+  box-shadow: 0 8px 22px var(--primary-tint);
+  flex: 1;
+}
+.btn-ghost{
+  background: var(--surface-2); color: var(--text);
+  border: 1.5px solid var(--border);
+  flex: 0 0 auto;
+}
+.btn-danger{
+  background: rgba(239,68,68,0.10);
+  color: var(--danger);
+  border: 1.5px solid rgba(239,68,68,0.2);
+  flex: 0 0 auto;
+}
+.btn-full{ width: 100%; flex: 1 1 100%; }
+
+/* ====================== TOAST ====================== */
+.toast-wrap{
+  position: fixed;
+  left: 0; right: 0;
+  top: calc(12px + var(--safe-top));
+  display: flex; justify-content: center;
+  z-index: 10000;
+  pointer-events: none;
+  padding: 0 16px;
+}
+.toast{
+  background: rgba(20,12,26,0.96);
+  color: #fff;
+  padding: 12px 18px; border-radius: 99px;
+  font-size: 13.5px; font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  animation: toastIn 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+  max-width: 100%;
+  text-align: center;
+}
+.toast.success{ background: linear-gradient(135deg, #22c55e, #16a34a); }
+.toast.error{ background: linear-gradient(135deg, #ef4444, #b91c1c); }
+@keyframes toastIn{
+  from{ opacity: 0; transform: translateY(-14px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+/* ====================== HINTS / SECTIONS ====================== */
+.hint{
+  font-size: 11.5px; color: var(--text-muted);
+  margin-top: 6px; font-weight: 500;
+}
+.settings-section{
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border);
+}
+.settings-section h4{
+  font-size: 12px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <svg class="logo-mini" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="gradTop" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#ff6b9d"/>
+        <stop offset="55%" stop-color="#c44569"/>
+        <stop offset="100%" stop-color="#6a0572"/>
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="24" fill="url(#gradTop)"/>
+    <circle cx="38" cy="46" r="17" fill="none" stroke="white" stroke-width="4" opacity="0.95"/>
+    <circle cx="62" cy="46" r="17" fill="none" stroke="white" stroke-width="4" opacity="0.95"/>
+    <path d="M50 74 C 42 67, 34 58, 34 51 C 34 45, 38.5 41.5, 43.5 41.5 C 47 41.5, 49.5 43.5, 50 46 C 50.5 43.5, 53 41.5, 56.5 41.5 C 61.5 41.5, 66 45, 66 51 C 66 58, 58 67, 50 74 Z" fill="white"/>
+  </svg>
+  <div class="title-block">
+    <h1>Sempre Juntos</h1>
+    <p id="topSub">Família em tempo real</p>
+  </div>
+  <button id="btnSettings" class="icon-btn" aria-label="Configurações" title="Configurações">⚙️</button>
+</div>
+
+<main id="main">
+  <div class="empty">
+    <span class="empty-emoji">💕</span>
+    <div class="empty-title">Carregando…</div>
+  </div>
+</main>
+
+<button id="fab" class="fab" aria-label="Adicionar membro" title="Adicionar membro">+</button>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- MEMBER MODAL -->
+<div class="modal" id="memberModal" hidden>
+  <div class="modal-card">
+    <div class="modal-grabber"></div>
+    <h3 id="memberModalTitle">Adicionar membro</h3>
+    <p class="modal-sub" id="memberModalSub">Preencha os dados do membro</p>
+
+    <form id="memberForm" novalidate>
+      <div class="field">
+        <label for="inpRole">Papel</label>
+        <select id="inpRole" required>
+          <option value="Esposa">Esposa</option>
+          <option value="Filho">Filho</option>
+          <option value="Filha">Filha</option>
+          <option value="Marido">Marido</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="inpName">Nome</label>
+        <input id="inpName" type="text" placeholder="Ex.: Ana" autocomplete="off" required maxlength="30">
+      </div>
+
+      <div class="field">
+        <label for="inpBirth">Data de nascimento</label>
+        <input id="inpBirth" type="date" required>
+      </div>
+
+      <div class="field">
+        <label>Foto</label>
+        <div class="photo-row">
+          <div class="photo-preview" id="photoPreview">🌟</div>
+          <div class="photo-actions">
+            <button type="button" class="btn btn-ghost" id="btnPickPhoto">📷 Escolher foto</button>
+            <button type="button" class="btn btn-ghost" id="btnRemovePhoto" hidden>🗑️ Remover foto</button>
+          </div>
+        </div>
+        <input type="file" id="inpPhoto" accept="image/*" hidden>
+        <p class="hint">Se não escolher foto, usamos o emoji abaixo.</p>
+      </div>
+
+      <div class="field">
+        <label>Emoji (usado quando não tem foto)</label>
+        <div class="emoji-picker" id="emojiPicker"></div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" id="btnCancelMember">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="btnSaveMember">Salvar</button>
+      </div>
+    </form>
+
+    <div id="editExtra" hidden style="margin-top:12px">
+      <button type="button" class="btn btn-danger btn-full" id="btnDeleteMember">🗑️ Excluir este membro</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal" id="settingsModal" hidden>
+  <div class="modal-card">
+    <div class="modal-grabber"></div>
+    <h3>Configurações</h3>
+    <p class="modal-sub">Casamento, aparência, notificações e backup</p>
+
+    <form id="settingsForm">
+      <div class="field">
+        <label for="setPerson1">Seu nome</label>
+        <input id="setPerson1" type="text" placeholder="Ex.: Carlos" maxlength="30">
+      </div>
+      <div class="field">
+        <label for="setPerson2">Nome da esposa</label>
+        <input id="setPerson2" type="text" placeholder="Ex.: Ana" maxlength="30">
+      </div>
+      <div class="field">
+        <label for="setMarriageDate">Data do casamento</label>
+        <input id="setMarriageDate" type="date">
+        <p class="hint">Deixe em branco se não quiser mostrar o painel do casamento.</p>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-full">💾 Salvar</button>
+      </div>
+    </form>
+
+    <div class="settings-section">
+      <h4>🎨 Aparência</h4>
+      <div class="theme-grid" id="themeGrid">
+        <button type="button" class="theme-opt" data-theme="rosa">
+          <div class="theme-swatch rosa"></div>
+          <div class="theme-name">Rosa</div>
+        </button>
+        <button type="button" class="theme-opt" data-theme="azul">
+          <div class="theme-swatch azul"></div>
+          <div class="theme-name">Azul</div>
+        </button>
+        <button type="button" class="theme-opt" data-theme="verde">
+          <div class="theme-swatch verde"></div>
+          <div class="theme-name">Verde</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h4>🔔 Notificações</h4>
+      <button type="button" class="btn btn-ghost btn-full" id="btnNotif">
+        <span id="notifBtnText">🔕 Ativar notificações</span>
+      </button>
+      <p class="hint" id="notifHint">Avisa no celular quando for aniversário de alguém.</p>
+    </div>
+
+    <div class="settings-section">
+      <h4>Backup</h4>
+      <button type="button" class="btn btn-ghost btn-full" id="btnExport">📤 Exportar backup</button>
+      <p class="hint" style="margin-top:8px">Baixa um arquivo com todos os seus dados. Guarde no Drive ou WhatsApp para não perder.</p>
+    </div>
+
+    <div class="settings-section">
+      <h4>Zona de perigo</h4>
+      <button type="button" class="btn btn-danger btn-full" id="btnReset">🗑️ Apagar tudo</button>
+    </div>
+
+    <div class="form-actions" style="margin-top:20px">
+      <button type="button" class="btn btn-ghost btn-full" id="btnCloseSettings">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal" id="confirmModal" hidden>
+  <div class="modal-card">
+    <div class="modal-grabber"></div>
+    <h3 id="confirmTitle">Confirmar</h3>
+    <p class="modal-sub" id="confirmMsg">Tem certeza?</p>
+    <div class="form-actions">
+      <button type="button" class="btn btn-ghost" id="confirmNo">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="confirmYes">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================
+   SEMPRE JUNTOS
+   ========================================================== */
+
+/* ============ CONFIG ============ */
+const CONFIG = {
+  STORAGE_KEY: 'sempre_juntos_v1',
+  THEME_KEY: 'sempre_juntos_theme_v1',
+  NOTIFIED_KEY: 'sempre_juntos_notified_v1',
+  TICK_MS: 1000,
+  PHOTO_MAX: 240,
+  PHOTO_QUALITY: 0.78,
+  THEMES: ['rosa', 'azul', 'verde'],
+  EMOJIS: {
+    Esposa: ['👩', '💑', '👰', '💕', '🌸'],
+    Filho:  ['👦', '🧒', '👶', '⚽', '🎮'],
+    Filha:  ['👧', '🧒', '👶', '🎀', '🌸'],
+    Marido: ['👨', '🤵', '💑', '💙', '⚡'],
+    Outro:  ['🌟', '❤️', '🦋', '🍀', '🎈']
+  },
+  BODAS: {
+    1:'Bodas de Papel', 2:'Bodas de Algodão', 3:'Bodas de Trigo',
+    4:'Bodas de Flores', 5:'Bodas de Madeira', 6:'Bodas de Perfume',
+    7:'Bodas de Lã', 8:'Bodas de Barro', 9:'Bodas de Cerâmica',
+    10:'Bodas de Estanho', 11:'Bodas de Aço', 12:'Bodas de Seda',
+    13:'Bodas de Renda', 14:'Bodas de Marfim', 15:'Bodas de Cristal',
+    20:'Bodas de Porcelana', 25:'Bodas de Prata', 30:'Bodas de Pérola',
+    35:'Bodas de Coral', 40:'Bodas de Rubi', 45:'Bodas de Safira',
+    50:'Bodas de Ouro', 55:'Bodas de Esmeralda', 60:'Bodas de Diamante',
+    70:'Bodas de Platina', 75:'Bodas de Brilhante'
+  }
+};
+
+/* ============ STATE ============ */
+const State = {
+  data: { marriage: null, members: [] },
+  editingId: null,
+  tempEmoji: '🌟',
+  tempPhoto: null,
+  tickTimer: null,
+  _confirmCallback: null
+};
+
+/* ============ STORAGE ============ */
+const Storage = {
+  load(){
+    try{
+      const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
+      if (!raw) return { marriage: null, members: [] };
+      const parsed = JSON.parse(raw);
+      return {
+        marriage: parsed.marriage || null,
+        members: Array.isArray(parsed.members) ? parsed.members : []
+      };
+    } catch(err){
+      console.warn('Erro lendo dados:', err);
+      return { marriage: null, members: [] };
+    }
+  },
+  save(data){
+    try{
+      localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
+      return true;
+    } catch(err){
+      console.error('Erro salvando:', err);
+      try{ UI.toast('Espaço cheio. Tente remover algumas fotos.', 'error'); }catch(e){}
+      return false;
+    }
+  },
+  loadTheme(){
+    try{
+      const t = localStorage.getItem(CONFIG.THEME_KEY);
+      return CONFIG.THEMES.indexOf(t) >= 0 ? t : 'rosa';
+    } catch(e){ return 'rosa'; }
+  },
+  saveTheme(theme){
+    try{ localStorage.setItem(CONFIG.THEME_KEY, theme); }catch(e){}
+  }
+};
+
+/* ============ DATE UTILS ============ */
+const Dates = {
+  parse(str){
+    if (!str) return null;
+    const parts = String(str).split('-').map(Number);
+    if (parts.length !== 3 || parts.some(function(n){ return !Number.isFinite(n); })) return null;
+    const y = parts[0], m = parts[1], d = parts[2];
+    const date = new Date(y, m - 1, d, 0, 0, 0);
+    if (isNaN(date.getTime())) return null;
+    return date;
+  },
+  diffYMD(from, to){
+    let y = to.getFullYear() - from.getFullYear();
+    let m = to.getMonth()    - from.getMonth();
+    let d = to.getDate()     - from.getDate();
+    if (d < 0){
+      m--;
+      const daysInPrevMonth = new Date(to.getFullYear(), to.getMonth(), 0).getDate();
+      d += daysInPrevMonth;
+    }
+    if (m < 0){ y--; m += 12; }
+    return { y: y, m: m, d: d };
+  },
+  nextAnniversary(dateStr, from){
+    from = from || new Date();
+    const base = Dates.parse(dateStr);
+    if (!base) return null;
+    const today = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+    let next = new Date(today.getFullYear(), base.getMonth(), base.getDate());
+    if (next < today) next.setFullYear(today.getFullYear() + 1);
+    const diffMs = next - today;
+    const days = Math.round(diffMs / 86400000);
+    return { date: next, days: days, isToday: days === 0 };
+  },
+  formatBR(dateStr){
+    const d = Dates.parse(dateStr);
+    if (!d) return '—';
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    return dd + '/' + mm + '/' + d.getFullYear();
+  },
+  plural(n, s, p){ return n === 1 ? s : p; },
+  bodasName(years){
+    if (CONFIG.BODAS[years]) return CONFIG.BODAS[years];
+    return 'Bodas de ' + years + ' anos';
+  },
+  todayKey(){
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+};
+
+/* ============ PHOTO ============ */
+const Photo = {
+  compress(file, maxSize, quality){
+    return new Promise(function(resolve, reject){
+      if (!file || !file.type || file.type.indexOf('image/') !== 0){
+        reject(new Error('Arquivo não é imagem.'));
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e){
+        const img = new Image();
+        img.onload = function(){
+          let w = img.width, h = img.height;
+          if (w > h){
+            if (w > maxSize){ h = Math.round(h * maxSize / w); w = maxSize; }
+          } else {
+            if (h > maxSize){ w = Math.round(w * maxSize / h); h = maxSize; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          try{
+            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+            resolve(dataUrl);
+          } catch(err){ reject(err); }
+        };
+        img.onerror = function(){ reject(new Error('Imagem inválida.')); };
+        img.src = e.target.result;
+      };
+      reader.onerror = function(){ reject(new Error('Erro lendo arquivo.')); };
+      reader.readAsDataURL(file);
+    });
+  }
+};
+
+/* ============ SERVICES ============ */
+const Services = {
+  newId(){
+    return 'm_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  },
+  addMember(member){
+    const m = {
+      id: Services.newId(),
+      role: (member.role || 'Outro').trim(),
+      name: (member.name || '').trim(),
+      birthDate: member.birthDate,
+      emoji: member.emoji || '🌟',
+      photo: member.photo || null
+    };
+    State.data.members.push(m);
+    return Storage.save(State.data);
+  },
+  updateMember(id, updates){
+    const idx = State.data.members.findIndex(function(x){ return x.id === id; });
+    if (idx === -1) return false;
+    State.data.members[idx] = Object.assign({}, State.data.members[idx], updates, { id: id });
+    return Storage.save(State.data);
+  },
+  removeMember(id){
+    State.data.members = State.data.members.filter(function(x){ return x.id !== id; });
+    return Storage.save(State.data);
+  },
+  saveMarriage(marriage){
+    State.data.marriage = marriage;
+    return Storage.save(State.data);
+  },
+  clearAll(){
+    State.data = { marriage: null, members: [] };
+    try{ localStorage.removeItem(CONFIG.STORAGE_KEY); }catch(e){}
+    return true;
+  },
+  exportBackup(){
+    const payload = {
+      app: 'Sempre Juntos',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      data: State.data
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const now = new Date();
+    const stamp = now.getFullYear()
+      + String(now.getMonth() + 1).padStart(2, '0')
+      + String(now.getDate()).padStart(2, '0')
+      + '-' + String(now.getHours()).padStart(2, '0')
+      + String(now.getMinutes()).padStart(2, '0');
+    a.href = url;
+    a.download = 'sempre-juntos-backup-' + stamp + '.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){
+      URL.revokeObjectURL(url);
+      a.remove();
+    }, 100);
+  }
+};
+
+/* ============ NOTIFICATIONS ============ */
+const Notify = {
+  supported(){
+    return typeof window.Notification !== 'undefined';
+  },
+  permission(){
+    return Notify.supported() ? Notification.permission : 'unsupported';
+  },
+  request(){
+    if (!Notify.supported()) return Promise.resolve('unsupported');
+    return Notification.requestPermission();
+  },
+  checkBirthdaysToday(){
+    if (Notify.permission() !== 'granted') return;
+    const today = new Date();
+    const todayKey = Dates.todayKey();
+    let notified = {};
+    try{ notified = JSON.parse(localStorage.getItem(CONFIG.NOTIFIED_KEY) || '{}'); }
+    catch(e){ notified = {}; }
+    const already = notified[todayKey] || [];
+
+    (State.data.members || []).forEach(function(m){
+      const b = Dates.parse(m.birthDate);
+      if (!b) return;
+      if (b.getMonth() !== today.getMonth()) return;
+      if (b.getDate() !== today.getDate()) return;
+      if (already.indexOf(m.id) >= 0) return;
+
+      try{
+        const n = new Notification('🎂 Hoje é aniversário de ' + m.name + '!', {
+          body: 'Não esqueça de dar os parabéns 💕',
+          tag: 'bday-' + m.id + '-' + todayKey,
+          requireInteraction: false
+        });
+        setTimeout(function(){ try{ n.close(); }catch(e){} }, 12000);
+        already.push(m.id);
+      } catch(err){ console.warn('Notificação falhou:', err); }
+    });
+
+    if (State.data.marriage && State.data.marriage.date){
+      const w = Dates.parse(State.data.marriage.date);
+      if (w && w.getMonth() === today.getMonth() && w.getDate() === today.getDate()){
+        const key = 'marriage';
+        if (already.indexOf(key) < 0){
+          try{
+            const n = new Notification('💍 Hoje é seu aniversário de casamento!', {
+              body: 'Parabéns! Não esqueça de comemorar 💕',
+              tag: 'wed-' + todayKey
+            });
+            setTimeout(function(){ try{ n.close(); }catch(e){} }, 12000);
+            already.push(key);
+          } catch(err){ console.warn(err); }
+        }
+      }
+    }
+
+    notified[todayKey] = already;
+    try{ localStorage.setItem(CONFIG.NOTIFIED_KEY, JSON.stringify(notified)); }catch(e){}
+  }
+};
+
+/* ============ THEME ============ */
+const Theme = {
+  apply(theme){
+    if (CONFIG.THEMES.indexOf(theme) < 0) theme = 'rosa';
+    if (theme === 'rosa'){
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+    Storage.saveTheme(theme);
+    document.querySelectorAll('.theme-opt').forEach(function(el){
+      el.classList.toggle('selected', el.dataset.theme === theme);
+    });
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta){
+      const colorMap = { rosa: '#c44569', azul: '#3b82f6', verde: '#10b981' };
+      meta.setAttribute('content', colorMap[theme] || '#c44569');
+    }
+  },
+  current(){
+    return Storage.loadTheme();
+  }
+};
+
+/* ============ UI ============ */
+const UI = {
+  $main: null,
+  $toastWrap: null,
+
+  init(){
+    UI.$main = document.getElementById('main');
+    UI.$toastWrap = document.getElementById('toastWrap');
+
+    document.getElementById('fab').addEventListener('click', function(){ UI.openMemberModal(null); });
+    document.getElementById('btnSettings').addEventListener('click', UI.openSettings);
+    document.getElementById('btnCancelMember').addEventListener('click', function(){ UI.closeModal('memberModal'); });
+    document.getElementById('btnCloseSettings').addEventListener('click', function(){ UI.closeModal('settingsModal'); });
+    document.getElementById('memberForm').addEventListener('submit', UI.onSubmitMember);
+    document.getElementById('settingsForm').addEventListener('submit', UI.onSubmitSettings);
+    document.getElementById('btnDeleteMember').addEventListener('click', UI.onDeleteFromEdit);
+    document.getElementById('btnExport').addEventListener('click', UI.onExport);
+    document.getElementById('btnReset').addEventListener('click', UI.onReset);
+    document.getElementById('btnNotif').addEventListener('click', UI.onToggleNotif);
+    document.getElementById('btnPickPhoto').addEventListener('click', function(){ document.getElementById('inpPhoto').click(); });
+    document.getElementById('btnRemovePhoto').addEventListener('click', UI.onRemovePhoto);
+    document.getElementById('inpPhoto').addEventListener('change', UI.onPickPhoto);
+
+    document.getElementById('confirmNo').addEventListener('click', function(){
+      State._confirmCallback = null;
+      UI.closeModal('confirmModal');
+    });
+    document.getElementById('confirmYes').addEventListener('click', function(){
+      const cb = State._confirmCallback;
+      State._confirmCallback = null;
+      UI.closeModal('confirmModal');
+      if (typeof cb === 'function'){
+        try{ cb(); }
+        catch(err){ console.error(err); UI.toast('Erro ao executar ação.', 'error'); }
+      }
+    });
+
+    document.querySelectorAll('.modal').forEach(function(m){
+      m.addEventListener('click', function(e){
+        if (e.target === m && m.id !== 'confirmModal'){
+          UI.closeModal(m.id);
+        }
+      });
+    });
+
+    document.getElementById('inpRole').addEventListener('change', function(){
+      State.tempEmoji = '🌟';
+      UI.renderEmojiPicker();
+    });
+
+    document.querySelectorAll('.theme-opt').forEach(function(el){
+      el.addEventListener('click', function(){
+        Theme.apply(el.dataset.theme);
+      });
+    });
+
+    UI.updateNotifButton();
+  },
+
+  updateNotifButton(){
+    const btnText = document.getElementById('notifBtnText');
+    const hint = document.getElementById('notifHint');
+    const btn = document.getElementById('btnNotif');
+    const p = Notify.permission();
+
+    if (p === 'unsupported'){
+      btnText.textContent = '🔕 Notificações indisponíveis';
+      hint.textContent = 'Seu navegador não suporta notificações.';
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      return;
+    }
+    btn.disabled = false;
+    btn.style.opacity = '1';
+
+    if (p === 'granted'){
+      btnText.textContent = '🔔 Notificações ativadas';
+      hint.textContent = 'Você será avisado no dia do aniversário (ao abrir o app).';
+    } else if (p === 'denied'){
+      btnText.textContent = '🔕 Notificações bloqueadas';
+      hint.textContent = 'Para ativar, libere as notificações nas configurações do navegador.';
+    } else {
+      btnText.textContent = '🔕 Ativar notificações';
+      hint.textContent = 'Avisa no celular quando for aniversário de alguém.';
+    }
+  },
+
+  onToggleNotif(){
+    const p = Notify.permission();
+    if (p === 'granted'){
+      UI.toast('Já está ativado. Para desativar, use as configurações do navegador.', 'success');
+      return;
+    }
+    if (p === 'denied'){
+      UI.toast('Bloqueado. Libere nas configurações do navegador.', 'error');
+      return;
+    }
+    Notify.request().then(function(result){
+      UI.updateNotifButton();
+      if (result === 'granted'){
+        UI.toast('Notificações ativadas! 🔔', 'success');
+        Notify.checkBirthdaysToday();
+      } else {
+        UI.toast('Notificações não ativadas.', 'error');
+      }
+    });
+  },
+
+  onPickPhoto(){
+    const input = document.getElementById('inpPhoto');
+    const file = input.files && input.files[0];
+    if (!file) return;
+    Photo.compress(file, CONFIG.PHOTO_MAX, CONFIG.PHOTO_QUALITY).then(function(dataUrl){
+      State.tempPhoto = dataUrl;
+      UI.updatePhotoPreview();
+      UI.toast('Foto carregada!', 'success');
+    }).catch(function(err){
+      console.error(err);
+      UI.toast('Não foi possível usar essa imagem.', 'error');
+    });
+    input.value = '';
+  },
+
+  onRemovePhoto(){
+    State.tempPhoto = null;
+    UI.updatePhotoPreview();
+    UI.toast('Foto removida.', 'success');
+  },
+
+  updatePhotoPreview(){
+    const preview = document.getElementById('photoPreview');
+    const btnRemove = document.getElementById('btnRemovePhoto');
+    if (State.tempPhoto){
+      preview.innerHTML = '<img src="' + State.tempPhoto + '" alt="">';
+      btnRemove.hidden = false;
+    } else {
+      preview.textContent = State.tempEmoji || '🌟';
+      btnRemove.hidden = true;
+    }
+  },
+
+  render(){
+    const data = State.data;
+    const hasMarriage = data.marriage && data.marriage.date;
+    const members = data.members || [];
+
+    let html = '';
+
+    if (hasMarriage){
+      html += UI.renderMarriage(data.marriage);
+    }
+
+    const upcoming = UI.buildUpcoming();
+    if (upcoming.length > 0){
+      html += UI.renderUpcoming(upcoming);
+    }
+
+    if (!hasMarriage && members.length === 0){
+      html += ''
+        + '<div class="empty" style="margin-bottom:22px">'
+        +   '<span class="empty-emoji">💍</span>'
+        +   '<div class="empty-title">Bem-vindo!</div>'
+        +   '<div class="empty-sub">Toque no ⚙️ no topo para colocar a data do casamento,<br>e no <strong>+</strong> para cadastrar a família.</div>'
+        + '</div>';
+    }
+
+    if (members.length > 0){
+      html += ''
+        + '<div class="section-head">'
+        +   '<h2>Família</h2>'
+        +   '<span>' + members.length + ' ' + (members.length === 1 ? 'pessoa' : 'pessoas') + '</span>'
+        + '</div>'
+        + '<div class="members-list">'
+        +   members.map(function(m){ return UI.renderMember(m); }).join('')
+        + '</div>';
+    } else if (hasMarriage){
+      html += ''
+        + '<div class="empty">'
+        +   '<span class="empty-emoji">🪺</span>'
+        +   '<div class="empty-title">Nenhum membro ainda</div>'
+        +   '<div class="empty-sub">Toque no <strong>+</strong> para cadastrar esposa, filho, filha...</div>'
+        + '</div>';
+    }
+
+    UI.$main.innerHTML = html;
+
+    UI.$main.querySelectorAll('[data-card-id]').forEach(function(el){
+      el.addEventListener('click', function(){
+        UI.openMemberModal(el.dataset.cardId);
+      });
+    });
+  },
+
+  buildUpcoming(){
+    const now = new Date();
+    const items = [];
+
+    (State.data.members || []).forEach(function(m){
+      const next = Dates.nextAnniversary(m.birthDate, now);
+      if (!next) return;
+      items.push({
+        kind: 'member',
+        id: m.id,
+        name: m.name,
+        role: m.role,
+        emoji: m.emoji || '🌟',
+        photo: m.photo || null,
+        days: next.days,
+        isToday: next.isToday
+      });
+    });
+
+    if (State.data.marriage && State.data.marriage.date){
+      const next = Dates.nextAnniversary(State.data.marriage.date, now);
+      if (next){
+        const p1 = State.data.marriage.person1 || 'Você';
+        const p2 = State.data.marriage.person2 || 'Esposa';
+        items.push({
+          kind: 'marriage',
+          id: 'marriage',
+          name: p1 + ' & ' + p2,
+          role: 'Casamento',
+          emoji: '💍',
+          photo: null,
+          days: next.days,
+          isToday: next.isToday
+        });
+      }
+    }
+
+    items.sort(function(a,b){ return a.days - b.days; });
+    return items.slice(0, 5);
+  },
+
+  renderUpcoming(items){
+    const rows = items.map(function(it){
+      const avatarHTML = it.photo
+        ? '<img src="' + it.photo + '" alt="">'
+        : it.emoji;
+
+      const cls = it.isToday ? 'upcoming-item is-today' : 'upcoming-item';
+      const dataAttr = it.kind === 'member'
+        ? 'data-upcoming-id="' + it.id + '"'
+        : 'data-upcoming-marriage="1"';
+
+      let daysHTML = '';
+      if (it.isToday){
+        daysHTML = '🎉 HOJE!';
+      } else {
+        daysHTML = '<small>Faltam</small>' + it.days + ' ' + Dates.plural(it.days, 'dia', 'dias');
+      }
+
+      return ''
+        + '<div class="' + cls + '" ' + dataAttr + '>'
+        +   '<div class="upcoming-avatar">' + avatarHTML + '</div>'
+        +   '<div class="upcoming-info">'
+        +     '<div class="upcoming-name">' + UI.escape(it.name) + '</div>'
+        +     '<div class="upcoming-role">' + UI.escape(it.role) + '</div>'
+        +   '</div>'
+        +   '<div class="upcoming-days">' + daysHTML + '</div>'
+        + '</div>';
+    }).join('');
+
+    setTimeout(function(){
+      UI.$main.querySelectorAll('[data-upcoming-id]').forEach(function(el){
+        el.addEventListener('click', function(){
+          UI.openMemberModal(el.dataset.upcomingId);
+        });
+      });
+      UI.$main.querySelectorAll('[data-upcoming-marriage]').forEach(function(el){
+        el.addEventListener('click', function(){ UI.openSettings(); });
+      });
+    }, 0);
+
+    return ''
+      + '<div class="section-head">'
+      +   '<h2>🎂 Próximas comemorações</h2>'
+      + '</div>'
+      + '<div class="upcoming">' + rows + '</div>';
+  },
+
+  renderMarriage(m){
+    const dateObj = Dates.parse(m.date);
+    if (!dateObj) return '';
+
+    const now = new Date();
+    const ymd = Dates.diffYMD(dateObj, now);
+    const ms  = now - dateObj;
+    const totalDays    = Math.floor(ms / 86400000);
+    const totalHours   = Math.floor(ms / 3600000);
+    const totalMinutes = Math.floor(ms / 60000);
+    const totalSeconds = Math.floor(ms / 1000);
+
+    const p1 = (m.person1 || 'Você').trim() || 'Você';
+    const p2 = (m.person2 || 'Esposa').trim() || 'Esposa';
+
+    const nextBodasYears = ymd.y + 1;
+    const nextBodasName = Dates.bodasName(nextBodasYears);
+    const nextBodas = Dates.nextAnniversary(m.date, now);
+
+    let bodasHTML = '';
+    if (nextBodas){
+      const label = nextBodas.isToday
+        ? '🎉 Hoje!'
+        : 'Faltam ' + nextBodas.days + ' ' + Dates.plural(nextBodas.days, 'dia', 'dias');
+      bodasHTML = ''
+        + '<div class="hero-bodas">'
+        +   '<div class="hero-bodas-icon">🥂</div>'
+        +   '<div class="hero-bodas-text">'
+        +     '<div class="hero-bodas-title">Próxima comemoração</div>'
+        +     '<div class="hero-bodas-value" data-live-bodas>' + UI.escape(nextBodasName) + ' • ' + label + '</div>'
+        +   '</div>'
+        + '</div>';
+    }
+
+    const parts = [];
+    if (ymd.m > 0) parts.push(ymd.m + ' ' + Dates.plural(ymd.m, 'mês', 'meses'));
+    if (ymd.d > 0 || parts.length === 0) parts.push(ymd.d + ' ' + Dates.plural(ymd.d, 'dia', 'dias'));
+    const subText = parts.join(' e ');
+
+    return ''
+      + '<section class="hero" id="heroMarriage" data-marriage-date="' + UI.escape(m.date) + '">'
+      +   '<div class="hero-badge">💍 Juntos</div>'
+      +   '<div class="hero-names">' + UI.escape(p1) + ' &nbsp;❤&nbsp; ' + UI.escape(p2) + '</div>'
+      +   '<div class="hero-main" data-live-y>'
+      +     ymd.y + ' <span>' + Dates.plural(ymd.y, 'ano', 'anos') + '</span>'
+      +   '</div>'
+      +   '<div class="hero-sub" data-live-sub>' + subText + '</div>'
+      +   '<div class="hero-divider"></div>'
+      +   '<div class="hero-live-label">Tempo juntos ao vivo</div>'
+      +   '<div class="hero-live" data-live-counter>'
+      +     totalDays.toLocaleString('pt-BR') + ' dias • '
+      +     UI.pad2(Math.floor(totalHours % 24)) + ':'
+      +     UI.pad2(Math.floor(totalMinutes % 60)) + ':'
+      +     UI.pad2(totalSeconds % 60)
+      +   '</div>'
+      +   bodasHTML
+      + '</section>';
+  },
+
+  renderMember(m){
+    const birth = Dates.parse(m.birthDate);
+    if (!birth) return '';
+
+    const now = new Date();
+    const ymd = Dates.diffYMD(birth, now);
+    const next = Dates.nextAnniversary(m.birthDate, now);
+
+    const ageNumber = ymd.y;
+    const ageWord = Dates.plural(ymd.y, 'ano', 'anos');
+
+    const detailParts = [];
+    if (ymd.m > 0) detailParts.push(ymd.m + ' ' + Dates.plural(ymd.m, 'mês', 'meses'));
+    if (ymd.d > 0) detailParts.push(ymd.d + ' ' + Dates.plural(ymd.d, 'dia', 'dias'));
+    const detailText = detailParts.join(' e ');
+
+    const ageLabelText = ageWord + (detailText ? ' e ' + detailText : '');
+
+    const bdayText = next.isToday
+      ? '🎉 Hoje é o aniversário!'
+      : '🎂 Faltam ' + next.days + ' ' + Dates.plural(next.days, 'dia', 'dias');
+    const bdayClass = next.isToday ? 'bday-badge today' : 'bday-badge';
+
+    const avatarInner = m.photo
+      ? '<img src="' + m.photo + '" alt="">'
+      : (m.emoji || '🌟');
+
+    return ''
+      + '<article class="card" data-card-id="' + m.id + '">'
+      +   '<header class="card-head">'
+      +     '<div class="avatar">' + avatarInner + '</div>'
+      +     '<div class="card-id">'
+      +       '<div class="card-role">' + UI.escape(m.role) + '</div>'
+      +       '<div class="card-name">' + UI.escape(m.name) + '</div>'
+      +     '</div>'
+      +   '</header>'
+      +   '<div class="card-age">'
+      +     '<div class="age-num" data-member-age-num="' + m.id + '">' + ageNumber + '</div>'
+      +     '<div class="age-label" data-member-age-label="' + m.id + '">' + ageLabelText + '</div>'
+      +   '</div>'
+      +   '<div class="card-info">'
+      +     '<div class="info-row">'
+      +       '🎈 Nascimento: <strong>' + Dates.formatBR(m.birthDate) + '</strong>'
+      +     '</div>'
+      +     '<div class="' + bdayClass + '" data-member-bday="' + m.id + '">' + bdayText + '</div>'
+      +   '</div>'
+      + '</article>';
+  },
+
+  tick(){
+    const now = new Date();
+
+    const hero = document.getElementById('heroMarriage');
+    if (hero && hero.dataset.marriageDate){
+      const dateObj = Dates.parse(hero.dataset.marriageDate);
+      if (dateObj){
+        const ymd = Dates.diffYMD(dateObj, now);
+        const ms = now - dateObj;
+        const totalDays = Math.floor(ms / 86400000);
+        const hours   = Math.floor(ms / 3600000) % 24;
+        const minutes = Math.floor(ms / 60000) % 60;
+        const seconds = Math.floor(ms / 1000) % 60;
+
+        const yEl = hero.querySelector('[data-live-y]');
+        const sEl = hero.querySelector('[data-live-sub]');
+        const cEl = hero.querySelector('[data-live-counter]');
+        const bEl = hero.querySelector('[data-live-bodas]');
+
+        if (yEl) yEl.innerHTML = ymd.y + ' <span>' + Dates.plural(ymd.y, 'ano', 'anos') + '</span>';
+
+        if (sEl){
+          const parts = [];
+          if (ymd.m > 0) parts.push(ymd.m + ' ' + Dates.plural(ymd.m, 'mês', 'meses'));
+          if (ymd.d > 0 || parts.length === 0) parts.push(ymd.d + ' ' + Dates.plural(ymd.d, 'dia', 'dias'));
+          sEl.textContent = parts.join(' e ');
+        }
+
+        if (cEl){
+          cEl.textContent = totalDays.toLocaleString('pt-BR') + ' dias • '
+            + UI.pad2(hours) + ':' + UI.pad2(minutes) + ':' + UI.pad2(seconds);
+        }
+
+        if (bEl){
+          const nextYears = ymd.y + 1;
+          const name = Dates.bodasName(nextYears);
+          const next = Dates.nextAnniversary(hero.dataset.marriageDate, now);
+          if (next){
+            const label = next.isToday
+              ? '🎉 Hoje!'
+              : 'Faltam ' + next.days + ' ' + Dates.plural(next.days, 'dia', 'dias');
+            bEl.textContent = name + ' • ' + label;
+          }
+        }
+      }
+    }
+
+    (State.data.members || []).forEach(function(m){
+      const birth = Dates.parse(m.birthDate);
+      if (!birth) return;
+
+      const ymd = Dates.diffYMD(birth, now);
+      const next = Dates.nextAnniversary(m.birthDate, now);
+
+      const ageNumEl = document.querySelector('[data-member-age-num="' + m.id + '"]');
+      const ageLabelEl = document.querySelector('[data-member-age-label="' + m.id + '"]');
+      const bdayEl = document.querySelector('[data-member-bday="' + m.id + '"]');
+
+      if (ageNumEl) ageNumEl.textContent = ymd.y;
+
+      if (ageLabelEl){
+        const detailParts = [];
+        if (ymd.m > 0) detailParts.push(ymd.m + ' ' + Dates.plural(ymd.m, 'mês', 'meses'));
+        if (ymd.d > 0) detailParts.push(ymd.d + ' ' + Dates.plural(ymd.d, 'dia', 'dias'));
+        const detailText = detailParts.join(' e ');
+        ageLabelEl.textContent = Dates.plural(ymd.y, 'ano', 'anos') + (detailText ? ' e ' + detailText : '');
+      }
+
+      if (bdayEl){
+        if (next.isToday){
+          bdayEl.className = 'bday-badge today';
+          bdayEl.textContent = '🎉 Hoje é o aniversário!';
+        } else {
+          bdayEl.className = 'bday-badge';
+          bdayEl.textContent = '🎂 Faltam ' + next.days + ' ' + Dates.plural(next.days, 'dia', 'dias');
+        }
+      }
+    });
+  },
+
+  openModal(id){
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.hidden = false;
+    document.body.style.overflow = 'hidden';
+  },
+  closeModal(id){
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.hidden = true;
+    document.body.style.overflow = '';
+  },
+
+  openMemberModal(id){
+    State.editingId = id;
+    const form = document.getElementById('memberForm');
+    form.reset();
+
+    const titleEl = document.getElementById('memberModalTitle');
+    const subEl   = document.getElementById('memberModalSub');
+    const extraEl = document.getElementById('editExtra');
+
+    if (id){
+      const m = State.data.members.find(function(x){ return x.id === id; });
+      if (!m) return;
+      titleEl.textContent = 'Editar membro';
+      subEl.textContent   = 'Toque nos campos para editar';
+      extraEl.hidden = false;
+
+      document.getElementById('inpRole').value  = m.role || 'Outro';
+      document.getElementById('inpName').value  = m.name || '';
+      document.getElementById('inpBirth').value = m.birthDate || '';
+      State.tempEmoji = m.emoji || '🌟';
+      State.tempPhoto = m.photo || null;
+    } else {
+      titleEl.textContent = 'Adicionar membro';
+      subEl.textContent   = 'Preencha os dados';
+      extraEl.hidden = true;
+      State.tempEmoji = '🌟';
+      State.tempPhoto = null;
+    }
+
+    UI.renderEmojiPicker();
+    UI.updatePhotoPreview();
+    UI.openModal('memberModal');
+    setTimeout(function(){
+      const inp = document.getElementById('inpName');
+      if (inp) inp.focus();
+    }, 260);
+  },
+
+  renderEmojiPicker(){
+    const wrap = document.getElementById('emojiPicker');
+    const role = document.getElementById('inpRole').value;
+    const list = CONFIG.EMOJIS[role] || CONFIG.EMOJIS.Outro;
+
+    if (list.indexOf(State.tempEmoji) === -1){
+      State.tempEmoji = list[0];
+    }
+
+    wrap.innerHTML = list.map(function(e){
+      const sel = e === State.tempEmoji ? ' selected' : '';
+      return '<button type="button" class="emoji-opt' + sel + '" data-emoji="' + e + '">' + e + '</button>';
+    }).join('');
+
+    wrap.querySelectorAll('.emoji-opt').forEach(function(b){
+      b.addEventListener('click', function(){
+        State.tempEmoji = b.dataset.emoji;
+        wrap.querySelectorAll('.emoji-opt').forEach(function(x){ x.classList.remove('selected'); });
+        b.classList.add('selected');
+        if (!State.tempPhoto) UI.updatePhotoPreview();
+      });
+    });
+  },
+
+  onSubmitMember(e){
+    e.preventDefault();
+
+    const role  = document.getElementById('inpRole').value;
+    const name  = document.getElementById('inpName').value.trim();
+    const birth = document.getElementById('inpBirth').value;
+
+    if (!name){ UI.toast('Informe o nome.', 'error'); return; }
+    if (!birth){ UI.toast('Informe a data de nascimento.', 'error'); return; }
+
+    const birthDate = Dates.parse(birth);
+    if (!birthDate){ UI.toast('Data inválida.', 'error'); return; }
+    if (birthDate > new Date()){ UI.toast('A data não pode ser no futuro.', 'error'); return; }
+
+    const payload = {
+      role: role,
+      name: name,
+      birthDate: birth,
+      emoji: State.tempEmoji,
+      photo: State.tempPhoto
+    };
+
+    let ok = false;
+    if (State.editingId){
+      ok = Services.updateMember(State.editingId, payload);
+    } else {
+      ok = Services.addMember(payload);
+    }
+
+    if (!ok){ UI.toast('Não foi possível salvar.', 'error'); return; }
+
+    const wasEditing = !!State.editingId;
+    State.editingId = null;
+    State.tempPhoto = null;
+
+    UI.closeModal('memberModal');
+    UI.render();
+    UI.tick();
+    UI.toast(wasEditing ? 'Membro atualizado!' : 'Membro adicionado!', 'success');
+  },
+
+  onDeleteFromEdit(){
+    const id = State.editingId;
+    if (!id) return;
+    const m = State.data.members.find(function(x){ return x.id === id; });
+    if (!m) return;
+
+    UI.confirm({
+      title: 'Excluir membro',
+      msg: 'Remover "' + m.name + '" da família? Não dá para desfazer.',
+      onYes: function(){
+        const ok = Services.removeMember(id);
+        State.editingId = null;
+        State.tempPhoto = null;
+        UI.closeModal('memberModal');
+        if (ok){
+          UI.render();
+          UI.tick();
+          UI.toast('Membro removido.', 'success');
+        } else {
+          UI.toast('Erro ao remover.', 'error');
+        }
+      }
+    });
+  },
+
+  openSettings(){
+    const m = State.data.marriage || {};
+    document.getElementById('setPerson1').value      = m.person1 || '';
+    document.getElementById('setPerson2').value      = m.person2 || '';
+    document.getElementById('setMarriageDate').value = m.date || '';
+    Theme.apply(Theme.current());
+    UI.updateNotifButton();
+    UI.openModal('settingsModal');
+  },
+
+  onSubmitSettings(e){
+    e.preventDefault();
+
+    const p1   = document.getElementById('setPerson1').value.trim();
+    const p2   = document.getElementById('setPerson2').value.trim();
+    const date = document.getElementById('setMarriageDate').value;
+
+    if (!date){
+      State.data.marriage = null;
+      Storage.save(State.data);
+      UI.closeModal('settingsModal');
+      UI.render();
+      UI.tick();
+      UI.toast('Casamento removido.', 'success');
+      return;
+    }
+
+    const d = Dates.parse(date);
+    if (!d){ UI.toast('Data inválida.', 'error'); return; }
+    if (d > new Date()){ UI.toast('A data não pode ser no futuro.', 'error'); return; }
+
+    Services.saveMarriage({
+      person1: p1 || 'Você',
+      person2: p2 || 'Esposa',
+      date: date
+    });
+
+    UI.closeModal('settingsModal');
+    UI.render();
+    UI.tick();
+    UI.toast('Configurações salvas!', 'success');
+  },
+
+  onExport(){
+    if (!State.data.marriage && State.data.members.length === 0){
+      UI.toast('Nada para exportar ainda.', 'error');
+      return;
+    }
+    Services.exportBackup();
+    UI.toast('Backup gerado! 📤', 'success');
+  },
+
+  onReset(){
+    UI.confirm({
+      title: 'Apagar tudo',
+      msg: 'Isso vai apagar o casamento e todos os membros cadastrados. Não dá para desfazer. Continuar?',
+      onYes: function(){
+        Services.clearAll();
+        UI.closeModal('settingsModal');
+        UI.render();
+        UI.tick();
+        UI.toast('Tudo apagado.', 'success');
+      }
+    });
+  },
+
+  confirm(opts){
+    document.getElementById('confirmTitle').textContent = opts.title || 'Confirmar';
+    document.getElementById('confirmMsg').textContent   = opts.msg || '';
+    State._confirmCallback = opts.onYes || null;
+    UI.openModal('confirmModal');
+  },
+
+  toast(msg, type){
+    const el = document.createElement('div');
+    el.className = 'toast ' + (type || '');
+    el.textContent = msg;
+    UI.$toastWrap.appendChild(el);
+    setTimeout(function(){
+      el.style.transition = 'opacity 0.3s, transform 0.3s';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(-10px)';
+      setTimeout(function(){ el.remove(); }, 320);
+    }, 2400);
+  },
+
+  escape(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[c];
+    });
+  },
+  pad2(n){
+    n = Number(n) || 0;
+    return String(n).padStart(2, '0');
+  }
+};
+
+/* ============ INIT ============ */
+(function init(){
+  State.data = Storage.load();
+  Theme.apply(Theme.current());
+  UI.init();
+  UI.render();
+  UI.tick();
+
+  if (State.tickTimer) clearInterval(State.tickTimer);
+  State.tickTimer = setInterval(function(){ UI.tick(); }, CONFIG.TICK_MS);
+
+  setTimeout(function(){ Notify.checkBirthdaysToday(); }, 800);
+
+  if ('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('service-worker.js').catch(function(err){
+        console.warn('Service Worker não registrado:', err);
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
