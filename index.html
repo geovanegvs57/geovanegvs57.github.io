@@ -1524,7 +1524,17 @@ const UI = {
 
   if ('serviceWorker' in navigator){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('service-worker.js').catch(function(err){
+      navigator.serviceWorker.register('service-worker.js').then(function(reg){
+        reg.addEventListener('updatefound', function(){
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', function(){
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller){
+              // Nova versão detectada! Recarrega a página automaticamente
+              window.location.reload();
+            }
+          });
+        });
+      }).catch(function(err){
         console.warn('Service Worker não registrado:', err);
       });
     });
