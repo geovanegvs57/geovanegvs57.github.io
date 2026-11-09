@@ -4,7 +4,8 @@
     "namespace": "android_app",
     "package_name": "io.github.geovanegvs57.twa",
     "sha256_cert_fingerprints": [
-      "57:F8:9F:0C:7E:76:6F:7D:F4:EB:B9:B7:08:E4:50:7A:19:00:AA:4D:69:90:85:6D:7F:E0:61:68:53:CE:4F:F1"
+      "57:F8:9F:0C:7E:76:6F:7D:F4:EB:B9:B7:08:E4:50:7A:19:00:AA:4D:69:90:85:6D:7F:E0:61:68:53:CE:4F:F1",
+      "13:32:47:E6:C0:4D:F3:71:A4:2A:D3:D5:FB:A7:0B:65:D3:F4:1E:56:AE:A6:36:08:67:C6:7E:9D:8D:1E:04:B6"
     ]
   }
 }]
